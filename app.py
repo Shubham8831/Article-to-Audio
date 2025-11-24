@@ -2,29 +2,11 @@ import streamlit as st
 import requests
 from io import BytesIO
 import time
-import uvicorn
-import threading
-
-def start_fastapi():
-    # import your FastAPI app here to avoid circular imports at module load
-    from api import app as fastapi_app  # replace with your module
-    uvicorn.run(fastapi_app, host="0.0.0.0", port=8000, log_level="info")
-
-# Start uvicorn in a background thread once
-if "fastapi_started" not in st.session_state:
-    t = threading.Thread(target=start_fastapi, daemon=True)
-    t.start()
-    st.session_state.fastapi_started = True
-    # tiny wait — adjust if needed
-    time.sleep(0.2)
-
-# # Now your Streamlit UI can call the locally started backend at http://localhost:8000
-# st.write("Streamlit is running. FastAPI (if started) should be at http://localhost:8000")
 
 
 
 # Configuration
-API_URL = "http://localhost:8000"
+API_URL = "https://article-to-audio.onrender.com/"
 
 # Page configuration
 st.set_page_config(
