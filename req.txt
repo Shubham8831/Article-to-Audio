@@ -1,0 +1,31 @@
+# FastAPI and Server
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+
+# HTTP and Async
+httpx
+aiofiles
+requests
+
+# Article Extraction
+newspaper3k
+trafilatura
+readability-lxml
+beautifulsoup4
+lxml
+
+# LLM Integration
+langchain
+langchain-community
+langchain_ollama
+
+# Text-to-Speech
+gTTS
+
+# Streamlit Frontend
+streamlit
+
+# Utilities
+python-dotenv
