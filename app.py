@@ -6,7 +6,8 @@ import time
 
 
 # Configuration
-API_URL = "https://article-to-audio.onrender.com/"
+API_URL = "https://article-to-audio.onrender.com/" 
+# API_URL = "http://localhost:8000/"
 
 # Page configuration
 st.set_page_config(
@@ -246,14 +247,3 @@ with output_container:
         """)
 
 
-# Health check indicator
-with st.sidebar:
-    st.divider()
-    try:
-        health_response = requests.get(f"{API_URL}/health", timeout=2)
-        if health_response.status_code == 200:
-            st.success(" API Server: Online")
-        else:
-            st.error(" API Server: Error")
-    except:
-        st.error("API Server: Offline")
