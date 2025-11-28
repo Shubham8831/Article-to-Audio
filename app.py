@@ -7,7 +7,7 @@ import time
 
 # Configuration
 API_URL = "https://article-to-audio.onrender.com/" 
-# API_URL = "http://localhost:8000/"
+#API_URL = "http://localhost:8000/"
 
 # Page configuration
 st.set_page_config(

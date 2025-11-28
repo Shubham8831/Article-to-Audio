@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article to Speech Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Stars */
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Floating Gradient Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #667eea, transparent);
+            top: -100px;
+            left: -100px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb2 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #764ba2, transparent);
+            bottom: -80px;
+            right: -80px;
+            animation: float 25s infinite ease-in-out reverse;
+        }
+
+        .orb3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #667eea, transparent);
+            bottom: 20%;
+            left: 10%;
+            animation: float 30s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(30px, -30px); }
+            50% { transform: translate(-30px, 30px); }
+            75% { transform: translate(30px, 30px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 4em;
+            margin-bottom: 15px;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #7188ed, #5f79ed 0%, #9459cf);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #b0b3d9;
+            margin-top: 10px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background: rgba(30, 41, 82, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .section:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
+        }
+
+        .section h2 {
+            color: #e0e7ff;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #b0b3d9;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            font-size: 1em;
+            color: #e0e7ff;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        input[type="text"]::placeholder,
+        textarea::placeholder {
+            color: rgba(176, 179, 217, 0.5);
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 200px;
+        }
+
+        .input-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(102, 126, 234, 0.2);
+            color: #b0b3d9;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .tab-btn:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+            color: #667eea;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4a67eb 0%, #6d31a9);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .radio-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #b0b3d9;
+            margin: 0;
+        }
+
+        .radio-option label:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: scale(1.02);
+        }
+
+        .radio-option input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #4a67eb 0%, #6d31a9);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            transform: scale(1.05);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4a67eb 0%, #6d31a9 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .output-section {
+            text-align: center;
+        }
+
+        .status-message {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .status-message.info {
+            background: rgba(25, 118, 210, 0.15);
+            border: 1px solid rgba(25, 118, 210, 0.3);
+            color: #64b5f6;
+        }
+
+        .status-message.success {
+            background: rgba(56, 142, 60, 0.15);
+            border: 1px solid rgba(56, 142, 60, 0.3);
+            color: #81c784;
+        }
+
+        .status-message.error {
+            background: rgba(211, 47, 47, 0.15);
+            border: 1px solid rgba(211, 47, 47, 0.3);
+            color: #ef5350;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin: 25px 0;
+            filter: invert(0.9);
+            border-radius: 10px;
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+        }
+
+        .translation-info {
+            background: rgba(33, 150, 243, 0.1);
+            border-left: 4px solid #2196F3;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+            color: #64b5f6;
+        }
+
+        .instructions {
+            background: rgba(30, 41, 82, 0.3);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: left;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 12px;
+            color: #b0b3d9;
+            line-height: 1.6;
+        }
+
+        .spinner {
+            border: 4px solid rgba(102, 126, 234, 0.2);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .logo {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-container" id="stars-container"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">🔊</div>
+            <h1>Article to Speech</h1>
+            <p>Convert any URL or text to audio in multiple languages</p>
+            <div class="badges">
+                <div class="badge">⚡ Fast Processing</div>
+                <div class="badge">🌍 Multi-Language</div>
+                <div class="badge">🎧 High Quality</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="section">
+                <h2 style="text-align: center; margin-bottom: 25px;">📥 Input</h2>
+                
+                <div class="input-tabs">
+                    <button class="tab-btn active" onclick="switchTab('url')">URL</button>
+                    <button class="tab-btn" onclick="switchTab('text')">Text</button>
+                </div>
+
+                <div id="url-tab" class="tab-content active">
+                    <div class="form-group">
+                        <label for="url-input">Article URL</label>
+                        <input type="text" id="url-input" placeholder="https://example.com/article">
+                    </div>
+                </div>
+
+                <div id="text-tab" class="tab-content">
+                    <div class="form-group">
+                        <label for="text-input">Article Text</label>
+                        <textarea id="text-input" placeholder="Paste your article text here (in any language)..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="language">Output Language</label>
+                    <select id="language">
+                        <option value="en">🇬🇧 English</option>
+                        <option value="hi">🇮🇳 Hindi</option>
+                        <option value="fr">🇫🇷 French</option>
+                        <option value="es">🇪🇸 Spanish</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Output Type</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="full" name="output-type" value="full" checked>
+                            <label for="full">Full Article</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="summary" name="output-type" value="summary">
+                            <label for="summary">Summary</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="generate-btn" onclick="generateAudio()">
+                    🎵 Generate & Play Audio
+                </button>
+            </div>
+
+            <!-- Output Section -->
+            <div class="section output-section">
+                <h2>🎧 Output</h2>
+                
+                <div id="output-container">
+                    <div class="instructions">
+                        <h3>How It Works:</h3>
+                        <ol>
+                            <li>Paste a link or text in any language</li>
+                            <li>Select the language you want to hear the audio in</li>
+                            <li>Choose whether you want the complete article or a summary</li>
+                            <li>Click generate and wait for your audio</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p3 style="color: #3f404a; "> Made by @Shubham</p3>
+
+    <script>
+        // Generate twinkling stars
+        function generateStars() {
+            const starsContainer = document.getElementById('stars-container');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        generateStars();
+
+        //const API_URL = 'http://localhost:8000';
+        const API_URL = 'https://article-to-audio.onrender.com/';
+        let currentTab = 'url';
+        let audioData = null;
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tab}-tab`).classList.add('active');
+        }
+
+        async function generateAudio() {
+            const urlInput = document.getElementById('url-input').value.trim();
+            const textInput = document.getElementById('text-input').value.trim();
+            const language = document.getElementById('language').value;
+            const outputType = document.querySelector('input[name="output-type"]:checked').value;
+            const outputContainer = document.getElementById('output-container');
+            const generateBtn = document.querySelector('.generate-btn');
+
+            if (currentTab === 'url' && !urlInput) {
+                showMessage('error', '❌ Please provide a URL!');
+                return;
+            }
+
+            if (currentTab === 'text' && !textInput) {
+                showMessage('error', '❌ Please provide article text!');
+                return;
+            }
+
+            if (currentTab === 'url' && !urlInput.startsWith('http://') && !urlInput.startsWith('https://')) {
+                showMessage('error', '❌ Please provide a valid URL starting with http:// or https://');
+                return;
+            }
+
+            generateBtn.disabled = true;
+            outputContainer.innerHTML = `
+                <div class="status-message info">
+                    <div class="spinner"></div>
+                    <p>🔄 Processing your request...</p>
+                </div>
+            `;
+
+            try {
+                const payload = {
+                    language: language,
+                    type: outputType
+                };
+
+                if (currentTab === 'url') {
+                    payload.url = urlInput;
+                } else {
+                    payload.text = textInput;
+                }
+
+                showMessage('info', '📡 Extracting article content...');
+                
+                setTimeout(() => {
+                    showMessage('info', '🌐 Translating to selected language...');
+                }, 500);
+
+                const response = await fetch(`${API_URL}/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Unknown error occurred');
+                }
+
+                showMessage('info', '🎵 Generating audio...');
+
+                const audioBlob = await response.blob();
+                audioData = audioBlob;
+
+                const targetLanguage = response.headers.get('X-Target-Language');
+
+                displayAudioPlayer(audioBlob, targetLanguage, language, outputType);
+
+            } catch (error) {
+                showMessage('error', `❌ Error: ${error.message}`);
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+
+        function showMessage(type, message) {
+            const outputContainer = document.getElementById('output-container');
+            outputContainer.innerHTML = `
+                <div class="status-message ${type}">
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        function displayAudioPlayer(audioBlob, targetLanguage, language, outputType) {
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const outputContainer = document.getElementById('output-container');
+
+            const languageNames = {
+                'en': 'English',
+                'hi': 'Hindi',
+                'fr': 'French',
+                'es': 'Spanish'
+            };
+
+            outputContainer.innerHTML = `
+                <div class="status-message success">
+                    <p>✅ Audio generated successfully!</p>
+                </div>
+                
+                ${targetLanguage ? `
+                <div class="translation-info">
+                    <strong>Translated to:</strong> ${languageNames[targetLanguage] || targetLanguage}<br>
+                    <small>The article was automatically translated and converted to audio in your selected language.</small>
+                </div>
+                ` : ''}
+                
+                <audio class="audio-player" controls>
+                    <source src="${audioUrl}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                
+                <button class="download-btn" onclick="downloadAudio('${language}', '${outputType}')">
+                    ⬇️ Download Audio
+                </button>
+            `;
+        }
+
+        function downloadAudio(language, outputType) {
+            if (!audioData) return;
+
+            const url = URL.createObjectURL(audioData);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `article_${language}_${outputType}.mp3`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
