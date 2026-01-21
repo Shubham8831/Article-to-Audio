@@ -11,7 +11,7 @@
 
 ## 📺 Demo Video
 
-https://github.com/user-attachments/assets/your-video-id-here
+[https://github.com/user-attachments/assets/your-video-id-here](https://github.com/Shubham8831/Article-to-Audio/raw/main/demo_video.mp4)
 
 > **Note:** To add your demo video to the README:
 > 1. Go to any GitHub issue or pull request
