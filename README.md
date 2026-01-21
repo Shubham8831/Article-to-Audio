@@ -322,7 +322,7 @@ netstat -ano | findstr :8000  # Windows
 **Shubham**
 
 - GitHub: [@shubham8831](https://github.com/Shubham8831)
-- LinkedIn: [shubham8831]((https://www.linkedin.com/in/shubham8831/))
+- LinkedIn: [shubham8831](https://www.linkedin.com/in/shubham8831/)
 
 ##  Acknowledgments
 
