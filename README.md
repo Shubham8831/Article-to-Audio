@@ -27,11 +27,11 @@ https://user-images.githubusercontent.com/yourusername/your-video.mp4
 
 <!-- Method 2: YouTube embed (if uploaded to YouTube) -->
 [![Watch the demo](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
-
+```
 <!-- Method 3: Using HTML for more control -->
 <video src="demo_video.mp4" controls="controls" style="max-width: 730px;">
 </video>
-```
+
 
 ## ✨ Features
 
